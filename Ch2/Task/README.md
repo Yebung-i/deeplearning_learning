@@ -191,5 +191,125 @@ plt.show()
 
 
 ## 7. 수학적 관점에서 퍼셉트론의 입출력사이의 관계식 y=f(x)은 선형함수인가 비선형함인가? 또, 입력신호(독립변수)의 갯수는 몇개이고 가질수 있는 값(정의역)은 무엇인가, 출력신호(종속변수)는 몇개이고 가질수 있는 값(공역)은 무엇인가
--  $y = f(x)$는 비선형 함수
+-  $y = f(x)$는 비선형 함수 이다.
+-  내부의 가중합  $z = w_1x_1 + w_2x_2 + b$ 자체는 선형이지만, 여기에 계단 함수 라고 하는 활성화 함수가 붙게 된다. ( 0을 넘으면 1, 아니면 0 을 씌워서 꺾이게 되니까 )
+- 입력신호의 갯수는 특별히 정해진 것은 없다. 하지만 출력변수는 하나로 귀결된다.
+
+## 8. 다음표는 2차원 평면상의 8개의 점의 x,y 좌표를 의미하고 label은 각점이 속한 클래스(0,1)를 의미한다.퍼셉트론의 입력은 2차원 좌표이고 출력은 0 또는 1의 값을 가져야한다
+(1) 6번에서 구현한 학습알고리즘을 이용하여 아래데이터를 분류하는 퍼셉트론의 가중치와 편향값을 구하라
+<img width="174" height="229" alt="image" src="https://github.com/user-attachments/assets/70323a32-eddc-4c2d-8ff7-008e511e715c" />
+
+
+(2) matplotlib을 이용하여 오차그래프를 그려보고 오차가 0으로 수렴하는지 확인하라  
+<img width="635" height="557" alt="image" src="https://github.com/user-attachments/assets/d126fc97-5331-47fe-8b99-322df9cb4fd9" />
+
+
+(3) (1)번에서 구한 가중치와 편향값을 이용하여  0<=x<=500, 0<=y<=500 범위의 모든 정수 좌표에 대하여 퍼셉트론의 출력을 계산하고 0이면 빨간색으로 그리고 1이면 초록색으로 그려주시오 opencv를 이용하여 500x500 크기의 영상을 만들고 아래 결과그림처럼 그려주면됨, 결정경계는 곡선이 아니고 직선으로 나와야함
+
+<img width="641" height="557" alt="image" src="https://github.com/user-attachments/assets/97f9001b-e1c0-4a1d-9aca-83bebe16c89a" />
+
+
+
+
+
+``` python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 입력 데이터
+X = np.array([
+    [150,200],
+    [200,250],
+    [100,250],
+    [150,300],
+    [350,100],
+    [400,200],
+    [400,300],
+    [350,400]
+])
+
+# 정답
+T = np.array([0,0,0,0,1,1,1,1])
+
+# 초기 가중치와 편향
+w1 = 0.0
+w2 = 0.0
+b = 0.0
+
+# 학습률
+lr = 0.001      # 입력값이 크므로 0.1보다 작게 설정
+
+# 반복 횟수
+epochs = 100
+
+# Epoch마다 오차 저장
+errors = []
+
+# 퍼셉트론 학습
+for epoch in range(epochs):
+
+    error_count = 0
+
+    for x, t in zip(X, T):
+
+        x1 = x[0]
+        x2 = x[1]
+
+        # 순입력 계산
+        net = w1 * x1 + w2 * x2 + b
+
+        # 활성화 함수
+        if net > 0:
+            y = 1
+        else:
+            y = 0
+
+        # 오차
+        error = t - y
+
+        # 가중치와 편향 갱신
+        w1 += lr * error * x1
+        w2 += lr * error * x2
+        b += lr * error
+
+        error_count += abs(error)
+
+    errors.append(error_count)
+
+    if error_count == 0:
+        break
+
+# 학습 결과
+print("학습된 가중치")
+print("w1 =", w1)
+print("w2 =", w2)
+print("b =", b)
+
+print("========================")
+
+# 검증
+for x in X:
+
+    x1 = x[0]
+    x2 = x[1]
+
+    net = w1 * x1 + w2 * x2 + b
+
+    if net > 0:
+        y = 1
+    else:
+        y = 0
+
+    print(f"{x} -> {y}")
+
+# 오차 그래프
+plt.plot(range(1, len(errors)+1), errors, marker='o')
+plt.title("Perceptron Learning Error")
+plt.xlabel("Epoch")
+plt.ylabel("Number of Errors")
+plt.grid(True)
+plt.show()
+```
+
+<img width="644" height="700" alt="image" src="https://github.com/user-attachments/assets/49e066cf-0526-4811-97b9-c81b72ed9024" />
 
