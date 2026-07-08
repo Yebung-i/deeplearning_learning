@@ -46,9 +46,14 @@ print(OR(1,1)) # 1
 ## 3. 퍼셉트론은 입력이 2차원일때 2차원 평면에서 직선으로 분리가 가능한 입력 데이터들만 분류가 가능하다. 이때, 분류의 기준이 되는 경계선의 방정식을 유도하라
 - z = w1x1 + w2x2 + b (여기서 z는 가중합을 의미)
 - 이때 활성화 함수로 스텝 함수를 사용하여 y를 구한다. 
-이때 활성화 함수로 스텝 함수를 사용하여 y를 구한다. 
-$$y = \begin{cases} 1 & (z \ge 0) \\ 0 & (z < 0) \end{cases}$$
+<img width="174" height="76" alt="image" src="https://github.com/user-attachments/assets/10f3ba8b-2ae5-4aa3-9591-1edf42a127e9" />
 
+- 여기서 분류 결과가 나뉘는 경계는 z = 0 인 곳이다 (출력이 0에서 1로 바뀌는 지점) >> 결정 경계는 다음과 같이 된다.
+  <img width="223" height="35" alt="image" src="https://github.com/user-attachments/assets/2d752f0f-d3d1-4c14-8f91-e035c4b4bd3e" />
+
+- 또한 이를 x2에 대해 정리한다면
+<img width="174" height="61" alt="image" src="https://github.com/user-attachments/assets/cd8a879c-1ac1-469d-89e3-1a8514e621a5" />
+이 되기에, 2차원 입력을 사용하는 퍼셉트론의 결정 경계는 직선이다.
 
 
 
@@ -77,7 +82,10 @@ $$y = \begin{cases} 1 & (z \ge 0) \\ 0 & (z < 0) \end{cases}$$
 ```
 
 - 과 같이 그려지는데, 보여지듯이 XOR은 두 클래스를 하나의 직선으로 나눌 수 없다. 때문에 직선 하나만을 결정 경계로 사용하 단층 퍼셉트론으로는 이를 완벽하게 분류해낼 수 없다.
-- 추후 추가
+- 따라서 중간에 은닉 층을 추가한 다층 퍼셉트론으로 해결 가능하며, 은닉층에 NAND 연산과 OR 연산을 담당하는 두 뉴런을 배치하고, 이 두 뉴런의 출력을 출력층에서 다시 AND로 결합하면 XOR와 동일한 결과를 얻을 수 있다.
+
+<img width="732" height="584" alt="image" src="https://github.com/user-attachments/assets/660f5531-ded1-4db4-9dbc-3a5fd5e65e3c" />
+
 
 ## 5. 퍼셉트론에서 활성화함수로 스텝함수를 사용하는 이유를 설명하라
 - 퍼셉트론은 이진 분류를 수행하는 모델이므로, 출력값을 0 또는 1로 구분해야 한다. 따라서 입력값이 임계값보다 크면 1, 아니면 0을 출력하기 때문에 퍼셉트론의 분류 목적에 적합하다.
@@ -182,4 +190,6 @@ plt.show()
   <img width="635" height="558" alt="image" src="https://github.com/user-attachments/assets/21f2e4c3-e4ed-491e-b416-b0f64c8e6ba8" />
 
 
+## 7. 수학적 관점에서 퍼셉트론의 입출력사이의 관계식 y=f(x)은 선형함수인가 비선형함인가? 또, 입력신호(독립변수)의 갯수는 몇개이고 가질수 있는 값(정의역)은 무엇인가, 출력신호(종속변수)는 몇개이고 가질수 있는 값(공역)은 무엇인가
+-  $y = f(x)$는 비선형 함수
 
