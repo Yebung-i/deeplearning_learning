@@ -54,6 +54,8 @@ print(OR(1,1)) # 1
 |0|1|1|
 |1|1|0|
 
+이를 2차원 좌표평면상에 표현하면
+
 ```text
             
                  ↑
@@ -68,4 +70,110 @@ print(OR(1,1)) # 1
                         0         1
 ```
 
-- XOR은 두 클래스를 하나의 직선으로 나눌 수 없다. 때문에 단층 퍼셉트론으로는 이를 완벽하게 분류해낼 수 없다. 
+- 과 같이 그려지는데, 보여지듯이 XOR은 두 클래스를 하나의 직선으로 나눌 수 없다. 때문에 직선 하나만을 결정 경계로 사용하 단층 퍼셉트론으로는 이를 완벽하게 분류해낼 수 없다.
+- 추후 추가
+
+## 5. 퍼셉트론에서 활성화함수로 스텝함수를 사용하는 이유를 설명하라
+- 퍼셉트론은 이진 분류를 수행하는 모델이므로, 출력값을 0 또는 1로 구분해야 한다. 따라서 입력값이 임계값보다 크면 1, 아니면 0을 출력하기 때문에 퍼셉트론의 분류 목적에 적합하다.
+
+## 6. . 퍼셉트론의 특성 파라미터인 가중치와 편향은 교재에서는 임의로 정했으나 실제로는 학습알고리즘을 이용하여 자동으로 결정한다. 프랭크 로젠블랫이 개발당시 사용한 퍼셉트론 학습알고리즘을 조사하고 AND 게이트 문제에 대하여 직접 구현하여 학습한후 AND게이트 문제를 잘 푸는지 검증해보라 matplotlib을 이용하여 오차그래프를 그려서 오차가 0으로 수렴하는지 확인하라 
+1. 가중치와 편향을 임의의 값으로 초기화한다.
+2. 입력 데이터를 이용하여 출력값을 계산한다.
+3. 예측값과 정답을 비교하여 오차를 계산한다.
+4. 오차를 이용하여 가중치와 편향을 수정한다.
+5. 모든 학습 데이터에 대하여 반복 수행하며 오차가 0이 될 때까지 학습한다.
+- 즉, 오차가 존재할 경우에만 가중치를 수정한다.
+
+``` python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 입력 데이터
+X = np.array([
+    [0,0],
+    [0,1],
+    [1,0],
+    [1,1]
+])
+
+# 정답
+T = np.array([0,0,0,1])
+
+# 초기 가중치와 편향
+w = np.random.randn(2)
+b = np.random.randn()
+
+# 학습률 (가중치를 얼마나 크게 수정할 것인지)
+lr = 0.1
+
+# 전체 데이터를 몇 번 반복 학습할 것인지
+epochs = 20
+
+# epoch마다 발생한 오차 개수 저장
+errors = []
+
+
+# 퍼셉트론 학습
+for epoch in range(epochs):
+    error_count = 0
+
+    # 학습 데이터를 하나씩 사용
+    for x, t in zip(X, T):
+        # 입력과 가중치를 곱하여 편향을 더함
+        net = np.dot(x, w) + b
+
+        # 활성화 함수, net이 0보다 크면 1, 아니면 0 반환
+        if net > 0:
+            y = 1
+        else:
+            y = 0
+
+        # 오차 계산
+        error = t - y
+
+        # 가중치 수정, 맞게 예측했다면 수정 안 함
+        w += lr * error * x
+
+        # 편향 수정
+        b += lr * error
+
+        error_count += abs(error)
+
+# 현재 epoh의 오차 저장
+    errors.append(error_count)
+
+# 학습 결과 출력
+print("학습된 가중치 : ", w)
+print("학습된 편향 : ", b)
+
+print("==============================================")
+
+for x in X:
+    # 학습된 가중치와 편향을 이용하여 예측함
+    net = np.dot(x,w)+b
+
+    if net > 0:
+        y = 1
+    else:
+        y = 0
+
+    print(f"{x}->{y}")
+
+# 오차 그래프 출력
+
+plt.plot(errors,marker="o")
+
+plt.title("Perception Learning Error")
+plt.xlabel("Epoch")
+plt.ylabel("Number of Errors")
+
+# 격자 표시
+plt.grid(True)
+plt.show()
+
+```
+
+  <img width="635" height="558" alt="image" src="https://github.com/user-attachments/assets/21f2e4c3-e4ed-491e-b416-b0f64c8e6ba8" />
+
+
+
